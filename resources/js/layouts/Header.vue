@@ -1,5 +1,6 @@
 <script setup>
 import {ref} from 'vue'
+import trediumLogo from '../assets/images/tredium_logo_tp_white.png'
 
 const tab = ref(null)
 
@@ -18,7 +19,12 @@ const sidebarDrawer = () => {
     >
         <v-container>
             <v-row class="d-flex justify-space-between align-center">
-                <v-app-bar-title class="ml-4">Tredium</v-app-bar-title>
+                <v-app-bar-title class="ml-4">
+                    <v-img
+                        max-width="128"
+                        :src="trediumLogo"
+                    ></v-img>
+                </v-app-bar-title>
                 <v-tabs
                     v-model="tab"
                     align-tabs="center"
