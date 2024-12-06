@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
- * @property string label
+ * @property string $label
  */
 class TagResource extends JsonResource
 {

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ArticleResource;
 use App\Models\Article;
 
 class HomeController extends Controller
@@ -10,9 +11,9 @@ class HomeController extends Controller
     public function index()
     {
         $articles = Article::query()
-            ->orderBy('published_at', 'DESC')
+            ->orderByDesc('published_at')
             ->paginate(6);
 
-        return response()->json($articles);
+        return ArticleResource::collection($articles);
     }
 }

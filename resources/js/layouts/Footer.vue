@@ -1,19 +1,16 @@
-<script>
-export default {
-    data: () => ({
-        icons: [
-            'mdi-facebook',
-            'mdi-twitter',
-            'mdi-linkedin',
-            'mdi-instagram',
-        ],
-    }),
-    computed: {
-        currentYear() {
-            return new Date().getFullYear();
-        },
-    },
-}
+<script setup>
+import {computed, ref} from 'vue'
+
+const icons = ref([
+    'mdi-facebook',
+    'mdi-twitter',
+    'mdi-linkedin',
+    'mdi-instagram'
+]);
+
+const currentYear = computed(() => {
+    return new Date().getFullYear();
+})
 </script>
 
 <template>
@@ -30,10 +27,10 @@ export default {
                     >
                         <v-col>
                             <v-card-title>
-                                <h1>Тредиум</h1>
+                                <h1>Tredium Blog</h1>
                             </v-card-title>
                             <v-card-text>
-                                <p>@ {{ currentYear }} Все права защищены</p>
+                                <p>@ {{ currentYear }} All rights reserved</p>
                             </v-card-text>
                         </v-col>
                     </v-card>
@@ -51,7 +48,7 @@ export default {
                             ></v-btn>
                         </v-row>
                     </v-container>
-                    <p>Как перестать прокрастинировать и начать жить</p>
+                    <p>Made using Laravel and Vuetify</p>
                 </v-col>
             </v-row>
         </v-container>

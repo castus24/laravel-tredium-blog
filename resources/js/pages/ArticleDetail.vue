@@ -1,62 +1,57 @@
-<script>
-export default {
-    props: {
-        slug: {
-            type: String,
-            required: true,
-        },
-    },
-    data() {
-        return {
-            article: null,
-            isLoading: true,
-            subject: "",
-            body: "",
-            submitting: false,
-            error: null,
-            success: null,
-        };
-    },
-    mounted() {
-        this.loadArticle();
-    },
-    methods: {
-        async loadArticle() {
-            try {
-                const response = await axios.get(`/api/articles/${this.slug}`)
-                ;
-                this.article = response.data;
-                this.isLoading = false;
-            } catch (error) {
-                console.error("Article detail loading error: ", error);
-                this.error = "Article detail loading error.";
-                this.isLoading = false;
-            }
-        },
-        async submitComment() {
-            this.submitting = true;
-            this.error = null;
-            this.success = null;
+<script setup>
+import {onMounted, ref} from 'vue'
 
-            try {
-                const response = await axios.post(`/api/articles/${this.slug}/comment`, {
-                            subject: this.subject,
-                            body:
-                            this.body,
-                        }
-                    )
-                ;
-                this.success = response.data.message;
-                this.subject = "";
-                this.body = "";
-            } catch (err) {
-                this.error = "Failed to submit comment. Please try again.";
-            } finally {
-                this.submitting = false;
-            }
-        },
+const props = defineProps({
+    slug: {
+        type: String,
+        required: true,
     },
-};
+})
+
+const article = ref(null)
+const isLoading = ref(false)
+const subject = ref('')
+const body = ref('')
+const submitting = ref(false)
+const error = ref(null)
+const success = ref(null)
+
+const loadArticle = async () => {
+    console.log(article)
+    this.isLoading = true
+    try {
+        const response = await axios.get(`/api/articles/${props.slug}`)
+        article.value = response.data
+        isLoading.value = false
+    } catch (error) {
+        console.error("Article detail loading error: ", error)
+        error.value = "Article detail loading error."
+        isLoading.value = false
+    }
+}
+
+const submitComment = async () => {
+    submitting.value = true
+    error.value = null
+    success.value = null
+
+    try {
+        const response = await axios.post(`/api/articles/${props.slug}/comment`, {
+            subject: subject.value,
+            body: body.value
+        })
+        success.value = response.data.message
+        subject.value = ""
+        body.value = ""
+    } catch (err) {
+        console.error("Failed to submit comment: ", err)
+        error.value = "Failed to submit comment. Please try again."
+    } finally {
+        submitting.value = false
+    }
+}
+
+onMounted(loadArticle)
 </script>
 
 <template>
@@ -69,10 +64,6 @@ export default {
                         <p>Загрузка статьи...</p>
                     </v-card-text>
                 </v-card>
-
-                <v-alert v-else-if="error" type="error" dismissible>
-                    {{ error }}
-                </v-alert>
 
                 <v-card v-else elevation="5" class="article-detail">
                     <v-card-title class="text-h4 font-weight-bold">

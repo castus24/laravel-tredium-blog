@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ArticleResource;
 use App\Models\Article;
 
 class ArticleController extends Controller
@@ -10,10 +11,10 @@ class ArticleController extends Controller
     public function index()
     {
         $articles = Article::query()
-            ->orderBy('published_at', 'DESC')
+            ->orderByDesc('published_at')
             ->paginate(10);
 
-        return response()->json($articles);
+        return ArticleResource::collection($articles);
     }
 
     public function show(string $slug)
@@ -22,7 +23,7 @@ class ArticleController extends Controller
             ->where('slug', $slug)
             ->first();
 
-        return response()->json($article);
+        return new ArticleResource($article);
     }
 
     public function storeComment($subject, $message)

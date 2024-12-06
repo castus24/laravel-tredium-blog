@@ -1,55 +1,40 @@
-<script>
-export default {
-    data() {
-        return {
-            chips: [],
-            tags: [],
-        }
-    },
-    mounted() {
-        this.loadTags();
-    },
-    methods: {
-        async loadTags() {
-            try {
-                const response = await axios.get('api/tags');
-                this.tags = response.data.data.map((tag) => tag.label);
-            } catch (error) {
-                console.log('Tags loading error: ', error)
-            }
-        },
-        remove(tag) {
-            this.chips.splice(this.chips.indexOf(tag), 1)
-        },
-    },
+<script setup>
+import {onMounted, ref} from 'vue'
+
+const chips = ref([])
+const tags = ref([])
+const loadTags = async () => {
+    try {
+        const response = await axios.get('api/tags');
+        tags.value = response.data.data.map((tag) => tag.label);
+    } catch (error) {
+        console.log('Tags loading error: ', error)
+    }
 }
+
+onMounted(loadTags)
 </script>
 
 <template>
-    <v-combobox
-        v-model="chips"
-        :items="tags"
-        variant="solo"
-        chips
-        clearable
-        multiple
-        placeholder="Add tags"
-    >
-        <template v-slot:selection="{ attrs, tag, select, selected }">
+    <v-item-group selected-class="bg-blue-darken-3" multiple>
+        <v-item
+            v-for="tag in tags"
+            :key="tag"
+            v-slot="{ selectedClass, toggle }"
+        >
             <v-chip
-                v-bind="attrs"
-                :model-value="selected"
-                closable
-                @click="select"
-                @click:close="remove(tag)"
+                :class="selectedClass"
+                @click="toggle"
             >
-                <strong>{{ tag }}</strong>
-                <span>(interest)</span>
+                {{ tag }}
             </v-chip>
-        </template>
-    </v-combobox>
+        </v-item>
+    </v-item-group>
 </template>
 
 <style scoped>
-
+.v-chip {
+    margin-right: 3px;
+    margin-bottom: 3px;
+}
 </style>

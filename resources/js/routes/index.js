@@ -1,8 +1,13 @@
 import Homepage from '../pages/Homepage.vue'
-import Catalog from '../pages/Catalog.vue';
-import Article from '../pages/Article.vue';
+import ArticleCatalog from '../pages/ArticleCatalog.vue';
+import ArticleDetail from '../pages/ArticleDetail.vue';
+import Login from '../pages/Login.vue';
+import Register from '../pages/Register.vue';
 
-export default [
+import { createRouter, createWebHistory } from 'vue-router';
+import { useAuthStore } from '../stores/auth';
+
+const routes = [
     {
         path: '/',
         name: 'home',
@@ -11,12 +16,39 @@ export default [
     {
         path: '/articles',
         name: 'articles',
-        component: Catalog,
+        component: ArticleCatalog,
     },
     {
         path: '/articles/:slug',
         name: 'articleDetail',
-        component: Article,
+        component: ArticleDetail,
         props: true,
     },
+    {
+        path: "/login",
+        name: "login",
+        component: Login
+    },
+    {
+        path: "/register",
+        name: "register",
+        component: Register
+    },
 ];
+
+const router = createRouter({
+    history: createWebHistory(),
+    routes,
+});
+
+router.beforeEach((to, from, next) => {
+    const authStore = useAuthStore();
+
+    if (to.meta.requiresAuth && !authStore.isAuthenticated) {
+        next({ name: 'login' });
+    } else {
+        next();
+    }
+});
+
+export default router;
