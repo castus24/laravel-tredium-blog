@@ -1,12 +1,11 @@
 <?php
 
-use App\Http\Controllers\Api\ArticleController;
-use App\Http\Controllers\Api\HomeController;
+use App\Http\Controllers\Api\Article\ArticleAllController;
+use App\Http\Controllers\Api\Article\ArticleShowController;
 use App\Http\Controllers\Api\TagController;
 use App\Http\Controllers\Api\User\ForgotPasswordController;
 use App\Http\Controllers\Api\User\LoginController;
 use App\Http\Controllers\Api\User\RegisterController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,12 +18,6 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
-Route::get('', [HomeController::class, 'index']);
 
 Route::prefix('user')
     ->group(function () {
@@ -40,9 +33,9 @@ Route::prefix('user')
 
 Route::prefix('articles')
     ->group(function () {
-        Route::get('', [ArticleController::class, 'index']);
-        Route::get('{slug}', [ArticleController::class, 'show']);
-        Route::post('{slug}/comment', [ArticleController::class, 'store']); //todo make using route /{slug}
+        Route::get('', ArticleAllController::class);
+        Route::get('{slug}', ArticleShowController::class);
+//        Route::post('{slug}/comment', [ArticleController::class, 'store']); //todo make using route /{slug}
     });
 
 Route::get('tags', [TagController::class, 'index']);

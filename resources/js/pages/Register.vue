@@ -16,7 +16,7 @@ const passwordVisible = ref(false)
 const currentTitle = computed(() => {
     switch (step.value) {
         case 1:
-            return 'Sign-up'
+            return 'Sign Up'
         case 2:
             return 'Create a password'
         default:
@@ -41,6 +41,10 @@ const nextStep = () => {
 const previousStep = () => {
     if (step.value > 1) step.value--
 };
+
+const goToLogin = () => {
+    router.push({name: 'login'})
+}
 
 const register = async () => {
     try {
@@ -73,9 +77,8 @@ const register = async () => {
             max-width="500"
             rounded="lg"
         >
-            <v-card-title class="text-h6 font-weight-regular justify-space-between mt-3">{{
-                    currentTitle
-                }}
+            <v-card-title class="text-h6 font-weight-regular justify-space-between mt-3">
+                {{ currentTitle }}
             </v-card-title>
 
             <!--            <v-alert v-if="errors" type="error" dismissible>-->
@@ -91,7 +94,13 @@ const register = async () => {
                             type="email"
                             required
                         ></v-text-field>
-                        <span class="text-caption text-grey-darken-1">This is the email you will use to login to your Vuetify account</span>
+                        <v-btn
+                            elevation="0"
+                            class="text-caption text-blue"
+                            @click="goToLogin"
+                        >
+                            I'm already have an account
+                        </v-btn>
                     </v-card-text>
                 </v-window-item>
 

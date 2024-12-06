@@ -40,7 +40,7 @@ const login = async () => {
             max-width="448"
             rounded="lg"
         >
-            <v-card-title class="headline d-flex justify-center mb-4">SIGN IN ACCOUNT</v-card-title>
+            <v-card-title class="d-flex justify-center mb-4">Sign In</v-card-title>
 
             <!--            <v-alert v-if="errors" type="error" dismissible>-->
             <!--                {{ errors }}-->

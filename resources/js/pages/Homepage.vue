@@ -4,19 +4,20 @@ import {onMounted, ref} from "vue"
 import {useRouter} from "vue-router"
 
 const router = useRouter()
-const articles = ref([])
 const images = ref([
     "https://picsum.photos/seed/image1/3100/800",
     "https://picsum.photos/seed/image2/3100/800",
     "https://picsum.photos/seed/image3/3100/800",
     "https://picsum.photos/seed/image4/3100/800",
 ])
+const articles = ref([])
+const perPage = ref(6)
 const isLoading = ref(false);
 
 const loadArticles = async () => {
     isLoading.value = true;
     try {
-        const response = await axios.get(`/api`)
+        const response = await axios.get(`/api/articles?per_page=${perPage.value}`)
         articles.value = response.data.data;
     } catch (error) {
         console.error("Articles loading error: ", error)
@@ -63,6 +64,3 @@ onMounted(loadArticles)
         </v-row>
     </v-container>
 </template>
-
-<style scoped>
-</style>

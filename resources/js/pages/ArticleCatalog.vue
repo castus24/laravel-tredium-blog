@@ -9,11 +9,12 @@ const articles = ref([])
 const currentPage = ref(1)
 const total = ref(0)
 const isLoading = ref(false)
+const perPage = ref(10)
 
-const loadArticles = async () => {
+const loadAllArticles = async () => {
     isLoading.value = true;
     try {
-        const response = await axios.get(`/api/articles?page=${currentPage.value}`)
+        const response = await axios.get(`/api/articles?page=${currentPage.value}&per_page=${perPage.value}`)
         articles.value = response.data.data
         currentPage.value = response.data.current_page
         total.value = response.data.last_page
@@ -25,14 +26,14 @@ const loadArticles = async () => {
 };
 
 const onPageChange = () => {
-    loadArticles()
+    loadAllArticles()
 };
 
 const goToArticle = (slug) => {
     router.push({name: "articleDetail", params: {slug}})
 };
 
-onMounted(loadArticles)
+onMounted(loadAllArticles)
 </script>
 
 <template>
@@ -74,6 +75,3 @@ onMounted(loadArticles)
         </v-row>
     </v-container>
 </template>
-
-<style scoped>
-</style>

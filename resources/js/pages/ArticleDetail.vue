@@ -17,16 +17,16 @@ const error = ref(null)
 const success = ref(null)
 
 const loadArticle = async () => {
-    console.log(article)
-    this.isLoading = true
+    isLoading.value = true
     try {
         const response = await axios.get(`/api/articles/${props.slug}`)
-        article.value = response.data
+        article.value = response.data.data
         isLoading.value = false
     } catch (error) {
         console.error("Article detail loading error: ", error)
         error.value = "Article detail loading error."
-        isLoading.value = false
+    } finally {
+        isLoading.value = false;
     }
 }
 
@@ -65,12 +65,16 @@ onMounted(loadArticle)
                     </v-card-text>
                 </v-card>
 
-                <v-card v-else elevation="5" class="article-detail">
+                <v-card
+                    v-else-if="article"
+                    elevation="5"
+                    class="article-detail"
+                >
                     <v-card-title class="text-h4 font-weight-bold">
                         {{ article.title }}
                     </v-card-title>
                     <v-card-subtitle class="text-body-2 mb-4">
-                        {{ article.created_at }}
+                        {{ article.published_at }}
                     </v-card-subtitle>
                     <v-card-text class="article-content">
                         {{ article.content }}
@@ -98,6 +102,8 @@ onMounted(loadArticle)
                         <v-btn
                             :disabled="submitting"
                             color="blue-darken-3"
+                            size="large"
+                            variant="tonal"
                             @click="submitComment"
                         >
                             Отправить
@@ -130,7 +136,6 @@ onMounted(loadArticle)
 
 .article-content {
     white-space: pre-wrap;
-    color: #333;
     line-height: 1.6;
     font-size: 16px;
 }
