@@ -1,69 +1,80 @@
-import { defineStore } from 'pinia';
-import { ref } from 'vue';
+import {defineStore} from 'pinia'
+import {ref} from 'vue'
 
 export const useAuthStore = defineStore('auth', () => {
-    const user = ref(null);
-    const isAuthenticated = ref(false);
-    const token = ref(null);
+    const userData = ref(null)
+    const isAuthenticated = ref(false)
+    const token = ref(null)
 
     const login = async (userData) => {
         try {
-            const { data } = await axios.post('/api/login', userData);
-            token.value = data.token;
-            axios.defaults.headers.common['Authorization'] = `Bearer ${token.value}`;
+            const {data} = await axios.post('/api/user/login', userData)
+            token.value = data.data.token
+            if (data.data.token) {
+                localStorage.setItem('auth_token', data.data.token)
+            }
 
-            await fetchUser();
-            isAuthenticated.value = true;
+            await fetchUser()
+            isAuthenticated.value = true
+
+            return data
         } catch (error) {
-            console.error('Login error:', error);
-            throw error;
+            console.error('Login error:', error)
+            throw error
         }
     };
 
     const register = async (userData) => {
         try {
-            const { data } = await axios.post('/api/register', userData);
-            token.value = data.token;
-            axios.defaults.headers.common['Authorization'] = `Bearer ${token.value}`;
-
-            await fetchUser();
-            isAuthenticated.value = true;
+            const {data} = await axios.post('/api/user/register', userData)
+            return data
         } catch (error) {
-            console.error('Register error:', error);
-            throw error;
+            console.error('Register error:', error)
+            throw error
         }
     };
 
-    const logout = async () => {
+    const logout = () => {
         try {
-            await axios.post('/api/logout');
+            localStorage.removeItem('auth_token')
+            userData.value = null
+            token.value = null
+            isAuthenticated.value = false
         } catch (error) {
-            console.error('Logout error:', error);
-        } finally {
-            user.value = null;
-            token.value = null;
-            isAuthenticated.value = false;
-            delete axios.defaults.headers.common['Authorization'];
+            console.error('Logout error:', error)
         }
     };
 
     const fetchUser = async () => {
         try {
-            const { data } = await axios.get('/api/user');
-            user.value = data;
+            const token = localStorage.getItem('auth_token')
+            if (!token) {
+                console.error('No token found');
+                logout();
+                return;
+            }
+
+            const {data} = await axios.get('/api/user', {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            userData.value = data.data
+            return data.data
         } catch (error) {
-            console.error('Fetch user error:', error);
-            await logout();
+            console.error('Fetch user error:', error)
+            logout()
         }
     };
 
     return {
-        user,
+        userData,
         isAuthenticated,
         token,
-        register,
         login,
         logout,
+        register,
         fetchUser,
     };
 });

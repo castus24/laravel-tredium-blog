@@ -3,15 +3,18 @@ import {ref} from 'vue'
 import {useAuthStore} from '../stores/auth'
 import {useRouter} from 'vue-router'
 import trediumLogo from '../assets/images/tredium_logo_tp_white.png'
+import {useToast} from 'vue-toastification'
 
 const authStore = useAuthStore()
 const router = useRouter()
+const toast = useToast()
 
 const passwordVisible = ref(false)
 const email = ref('')
 const password = ref('')
 
-const register = () => router.push({name: 'register'})
+const goToRegister = () => router.push({name: 'register'})
+const goToHome = () => router.push({name: 'home'})
 
 const login = async () => {
     try {
@@ -20,9 +23,12 @@ const login = async () => {
             password: password.value
         });
 
-        router.push({name: 'home'})
+        await goToHome()
     } catch (error) {
-        console.error(error)
+        console.log(error.message)
+        const errorMessage = error.response?.error || 'Произошла ошибка при входе в аккаунт';
+
+        toast.error(errorMessage)
     }
 }
 </script>
@@ -42,10 +48,6 @@ const login = async () => {
             rounded="lg"
         >
             <v-card-title class="d-flex justify-center mb-4">Sign In</v-card-title>
-
-            <!--            <v-alert v-if="errors" type="error" dismissible>-->
-            <!--                {{ errors }}-->
-            <!--            </v-alert>-->
 
             <v-form>
                 <v-text-field
@@ -92,7 +94,7 @@ const login = async () => {
                     v-if="!authStore.isAuthenticated"
                     variant="plain"
                     class="text-blue"
-                    @click="register"
+                    @click="goToRegister"
                 >
                     Sign up now
                     <v-icon icon="mdi-chevron-right"></v-icon>

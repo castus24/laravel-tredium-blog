@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\TagController;
 use App\Http\Controllers\Api\User\ForgotPasswordController;
 use App\Http\Controllers\Api\User\LoginController;
 use App\Http\Controllers\Api\User\RegisterController;
+use App\Http\Controllers\Api\User\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -28,6 +29,10 @@ Route::prefix('user')
                 Route::post('email', [ForgotPasswordController::class, 'sendResetLink']);
                 // TODO: Заменить на PUT?
                 Route::post('reset', [ForgotPasswordController::class, 'reset']);
+            });
+        Route::middleware('auth:sanctum')
+            ->group(function () {
+                Route::get('', UserController::class);
             });
     });
 

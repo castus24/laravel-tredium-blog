@@ -14,7 +14,7 @@ class LoginController extends Controller
     {
         if (!auth()->attempt($request->only('email', 'password'))) {
             return response()->json([
-                'message' => "Auth login error"
+                'message' => "Invalid credentials"
             ], ResponseAlias::HTTP_UNAUTHORIZED);
         }
 

@@ -3,11 +3,12 @@ import {ref, computed} from 'vue'
 import {useAuthStore} from '../stores/auth'
 import {useRouter} from 'vue-router'
 import trediumLogo from '../assets/images/tredium_logo_tp_white.png'
+import {useToast} from 'vue-toastification'
 
 const authStore = useAuthStore()
 const router = useRouter()
+const toast = useToast()
 
-const name = ref('')
 const email = ref('')
 const password = ref('')
 const confirmPassword = ref('')
@@ -43,22 +44,34 @@ const previousStep = () => {
     if (step.value > 1) step.value--
 };
 
-const goToLogin = () => {
-    router.push({name: 'login'})
-}
+const goToLogin = () => router.push({name: 'login'})
 
 const register = async () => {
     try {
         if (password.value !== confirmPassword.value) {
-            throw new Error('Passwords do not match')
+            console.error('Passwords do not match')
+            toast.warning('Passwords do not match')
+            return
         }
-        await authStore.register({
-            name: name.value,
+
+        const response = await authStore.register({
             email: email.value,
             password: password.value,
+            password_confirmation: confirmPassword.value
         });
+
+        if (response) {
+            toast.success(response.message);
+        } else {
+            toast.warning('Unexpected response from server');
+        }
+
+        await goToLogin()
     } catch (error) {
-        console.error(error.message)
+        console.log(error.message)
+        const errorMessage = error.response?.error || 'Произошла ошибка регистрации';
+
+        toast.error(errorMessage)
     }
 }
 </script>
@@ -79,10 +92,6 @@ const register = async () => {
             <v-card-title class="text-h6 font-weight-regular justify-space-between mt-3">
                 {{ currentTitle }}
             </v-card-title>
-
-            <!--            <v-alert v-if="errors" type="error" dismissible>-->
-            <!--                {{ errors }}-->
-            <!--            </v-alert>-->
 
             <v-window v-model="step">
                 <v-window-item :value="1">
@@ -123,7 +132,6 @@ const register = async () => {
                             :append-icon="passwordVisible ? 'mdi-eye-off' : 'mdi-eye'"
                             @click:append="passwordVisible = !passwordVisible"
                         ></v-text-field>
-                        <span class="text-caption text-grey-darken-1">Please enter a password for your account</span>
                     </v-card-text>
                 </v-window-item>
 
@@ -149,6 +157,7 @@ const register = async () => {
                 <v-btn
                     v-if="step > 1"
                     variant="text"
+                    size="large"
                     @click="previousStep"
                 >
                     Back
@@ -158,7 +167,7 @@ const register = async () => {
                     v-if="step < 3"
                     color="blue-darken-3"
                     size="large"
-                    variant="tonal"
+                    variant="text"
                     :disabled="!isFormValid"
                     @click="nextStep"
                 >
@@ -168,7 +177,7 @@ const register = async () => {
                     v-if="step === 2"
                     color="blue-darken-3"
                     size="large"
-                    variant="flat"
+                    variant="tonal"
                     :disabled="!isFormValid"
                     @click="register"
                 >
