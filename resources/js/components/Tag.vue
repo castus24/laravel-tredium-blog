@@ -23,6 +23,7 @@ onMounted(loadTags)
             v-slot="{ selectedClass, toggle }"
         >
             <v-chip
+                class="tag"
                 :class="selectedClass"
                 @click="toggle"
             >
@@ -31,10 +32,3 @@ onMounted(loadTags)
         </v-item>
     </v-item-group>
 </template>
-
-<style scoped>
-.v-chip {
-    margin-right: 3px;
-    margin-bottom: 3px;
-}
-</style>

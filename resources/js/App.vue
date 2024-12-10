@@ -1,8 +1,9 @@
 <script setup>
+import {ref} from "vue"
 import Header from './layouts/Header.vue'
 import Footer from './layouts/Footer.vue'
 import Sidebar from './layouts/Sidebar.vue'
-import {ref} from "vue"
+import '@/styles/index.scss'
 
 const drawer = ref(false)
 </script>

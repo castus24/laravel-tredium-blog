@@ -27,7 +27,6 @@ Route::prefix('user')
         Route::prefix('password')
             ->group(function() {
                 Route::post('email', [ForgotPasswordController::class, 'sendResetLink']);
-                // TODO: Заменить на PUT?
                 Route::post('reset', [ForgotPasswordController::class, 'reset']);
             });
         Route::middleware('auth:sanctum')

@@ -35,14 +35,14 @@ class ForgotPasswordController extends Controller
     /**
      * The Hasher implementation.
      *
-     * @var HasherContract
+     * @var Hasher
      */
     protected HasherContract $hasher;
 
     /**
      * Create a new token repository instance.
      *
-     * @param HasherContract $hasher
+     * @param Hasher $hasher
      */
     public function __construct(HasherContract $hasher)
     {
@@ -50,6 +50,8 @@ class ForgotPasswordController extends Controller
     }
 
     /**
+     * Send a password reset link to a user.
+     *
      * @param ForgotPasswordRequest $request
      * @return JsonResponse
      */
@@ -201,77 +203,6 @@ class ForgotPasswordController extends Controller
     /**
      * Reset the password for the given token.
      *
-     * @OA\Post(
-     *     path="/User/Password/Reset",
-     *     operationId="PostUserPasswordReset",
-     *     tags={"User"},
-     *     summary="Установка нового пароля на учетную запись пользователя",
-     *     @OA\RequestBody(
-     *         required=true,
-     *         @OA\JsonContent(ref="#/components/schemas/ForgotPasswordResetRequest"),
-     *     ),
-     *     @OA\Response(
-     *         response="200",
-     *         description="OK. Пароль установлен",
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(
-     *                 property="message",
-     *                 type="string",
-     *                 example="Your password has been reset.",
-     *             ),
-     *         ),
-     *     ),
-     *     @OA\Response(
-     *         response="401",
-     *         description="UNAUTHORIZED. Пользователь не найден",
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(
-     *                 property="message",
-     *                 type="string",
-     *                 example="We can't find a user with that email address.",
-     *             ),
-     *         ),
-     *     ),
-     *     @OA\Response(
-     *         response="422",
-     *         description="UNPROCESSABLE CONTENT. Валидация данных не пройдена",
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(
-     *                 property="message",
-     *                 type="string",
-     *                 example="The email field must be a valid email address. (and 1 more error)",
-     *             ),
-     *             @OA\Property(
-     *                 property="errors",
-     *                 type="object",
-     *                 @OA\Property(
-     *                     property="email",
-     *                     type="object",
-     *                     example={
-     *                         "The email field must be a valid email address.",
-     *                         "The email field must not be greater than 255 characters.",
-     *                     },
-     *                 ),
-     *             ),
-     *         ),
-     *     ),
-     *     @OA\Response(
-     *         response="429",
-     *         description="TOO MANY REQUESTS. Cлишком частые запросы",
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(
-     *                 property="message",
-     *                 type="string",
-     *                 example="Please wait before retrying.",
-     *             ),
-     *         ),
-     *     ),
-     * )
-     *
      * @param ForgotPasswordResetRequest $request
      * @return JsonResponse
      */
@@ -279,7 +210,7 @@ class ForgotPasswordController extends Controller
     {
         $user = $this->validateReset($request);
 
-        if (! $user instanceof Model) {
+        if (!$user instanceof Model) {
             return $user;
         }
 

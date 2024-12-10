@@ -1,8 +1,13 @@
 import Homepage from '../pages/Homepage.vue'
-import ArticleCatalog from '../pages/ArticleCatalog.vue';
-import ArticleDetail from '../pages/ArticleDetail.vue';
-import Login from '../pages/Login.vue';
-import Register from '../pages/Register.vue';
+import ArticleCatalog from '../pages/articles/ArticleCatalog.vue';
+import ArticleDetail from '../pages/articles/ArticleDetail.vue';
+import Login from '../pages/auth/Login.vue';
+import Register from '../pages/auth/Register.vue';
+import PasswordForgot from "../pages/auth/password/PasswordForgot.vue";
+import PasswordReset from "../pages/auth/password/PasswordReset.vue";
+import NotFound404 from "../pages/NotFound404.vue";
+import PasswordWrapper from "../pages/auth/password/PasswordWrapper.vue";
+import Profile from "../pages/user/Profile.vue";
 
 import { createRouter, createWebHistory } from 'vue-router';
 import { useAuthStore } from '../stores/auth';
@@ -33,6 +38,32 @@ const routes = [
         path: "/register",
         name: "register",
         component: Register
+    },
+    {
+        path: '/password',
+        component: PasswordWrapper,
+        children: [
+            {
+                path: 'email',
+                name: 'resetLink',
+                component: PasswordForgot,
+            },
+            {
+                path: 'reset',
+                name: 'passwordReset',
+                component: PasswordReset,
+            },
+        ],
+    },
+    {
+        path: "/user/profile",
+        name: "profile",
+        component: Profile
+    },
+    {
+        path: '/:pathMatch(.*)*',
+        name: '404',
+        component: NotFound404,
     },
 ];
 

@@ -1,37 +1,39 @@
 <script setup>
-import {ref, computed} from 'vue'
-import {useAuthStore} from '../stores/auth'
+import {ref, computed, reactive} from 'vue'
+import {useAuthStore} from '@/stores/auth.js'
 import {useRouter} from 'vue-router'
-import trediumLogo from '../assets/images/tredium_logo_tp_white.png'
+import trediumLogo from '@/assets/images/tredium_logo_tp_white.png'
 import {useToast} from 'vue-toastification'
 
 const authStore = useAuthStore()
 const router = useRouter()
 const toast = useToast()
 
-const email = ref('')
-const password = ref('')
-const confirmPassword = ref('')
 const step = ref(1)
-const passwordVisible = ref(false)
+const isPasswordVisible = ref(false);
+const isPasswordConfirmationVisible = ref(false);
+const isLoading = ref(false)
 
-const currentTitle = computed(() => {
-    switch (step.value) {
-        case 1:
-            return 'Sign Up'
-        case 2:
-            return 'Create a password'
-        default:
-            return 'Account created'
-    }
-});
+const form = reactive({
+    email: null,
+    password: null,
+    password_confirmation: null,
+})
+
+const titles = {
+    1: 'Sign Up',
+    2: 'Create a password',
+    3: 'Account created',
+};
+
+const currentTitle = computed(() => titles[step.value]);
 
 const isFormValid = computed(() => {
     if (step.value === 1) {
-        return email.value !== ''
+        return form.email !== ''
     }
     if (step.value === 2) {
-        return password.value !== '' && password.value === confirmPassword.value
+        return form.password !== '' && form.password === form.password_confirmation
     }
     return true;
 });
@@ -44,32 +46,30 @@ const previousStep = () => {
     if (step.value > 1) step.value--
 };
 
-const goToLogin = () => router.push({name: 'login'})
-
 const register = async () => {
     try {
-        if (password.value !== confirmPassword.value) {
-            console.error('Passwords do not match')
-            toast.warning('Passwords do not match')
-            return
+        if (!isFormValid.value) {
+            toast.warning('Please ensure all fields are valid.');
+            return;
         }
 
         const response = await authStore.register({
-            email: email.value,
-            password: password.value,
-            password_confirmation: confirmPassword.value
+            email: form.email,
+            password: form.password,
+            password_confirmation: form.password_confirmation
         });
 
         if (response) {
-            toast.success(response.message);
+            toast.success(response.message)
+            setTimeout(() => {
+                router.push({ name: 'login' })
+            }, 2000);
         } else {
-            toast.warning('Unexpected response from server');
+            toast.warning('Unexpected response from server')
         }
-
-        await goToLogin()
     } catch (error) {
         console.log(error.message)
-        const errorMessage = error.response?.error || 'Произошла ошибка регистрации';
+        const errorMessage = error.response?.error || 'Произошла ошибка регистрации'
 
         toast.error(errorMessage)
     }
@@ -94,10 +94,10 @@ const register = async () => {
             </v-card-title>
 
             <v-window v-model="step">
-                <v-window-item :value="1">
+                <v-window-item :value="1" eager>
                     <v-card-text>
                         <v-text-field
-                            v-model="email"
+                            v-model="form.email"
                             label="Email"
                             type="email"
                             required
@@ -105,48 +105,48 @@ const register = async () => {
                         <v-btn
                             elevation="0"
                             class="text-caption text-blue"
-                            @click="goToLogin"
+                            :to="{ name: 'login' }"
                         >
                             I'm already have an account
                         </v-btn>
                     </v-card-text>
                 </v-window-item>
 
-                <v-window-item :value="2">
+                <v-window-item :value="2" eager>
                     <v-card-text>
                         <v-text-field
-                            v-model="password"
+                            v-model="form.password"
                             label="Password"
                             required
                             hint="At least 8 characters"
-                            :type="passwordVisible ? 'text' : 'password'"
-                            :append-icon="passwordVisible ? 'mdi-eye-off' : 'mdi-eye'"
-                            @click:append="passwordVisible = !passwordVisible"
+                            :type="isPasswordVisible ? 'text' : 'password'"
+                            :append-icon="isPasswordVisible ? 'mdi-eye-off' : 'mdi-eye'"
+                            @click:append="isPasswordVisible = !isPasswordVisible"
                         ></v-text-field>
                         <v-text-field
-                            v-model="confirmPassword"
+                            v-model="form.password_confirmation"
                             label="Confirm password"
                             required
                             hint="At least 8 characters"
-                            :type="passwordVisible ? 'text' : 'password'"
-                            :append-icon="passwordVisible ? 'mdi-eye-off' : 'mdi-eye'"
-                            @click:append="passwordVisible = !passwordVisible"
+                            :type="isPasswordConfirmationVisible ? 'text' : 'password'"
+                            :append-icon="isPasswordConfirmationVisible ? 'mdi-eye-off' : 'mdi-eye'"
+                            @click:append="isPasswordConfirmationVisible = !isPasswordConfirmationVisible"
                         ></v-text-field>
                     </v-card-text>
                 </v-window-item>
 
-                <v-window-item :value="3">
+                <v-window-item :value="3" eager>
                     <div class="pa-4 text-center">
                         <v-img
                             class="mb-4"
                             height="128"
-                            src="https://cdn.vuetifyjs.com/images/logos/v.svg"
+                            :src="trediumLogo"
                             contain
                         ></v-img>
                         <h3 class="text-h6 font-weight-light mb-2">
-                            Welcome to Vuetify
+                            Welcome to Tredium
                         </h3>
-                        <span class="text-caption text-grey">Thanks for signing up!</span>
+                        <span class="text-caption text-grey">Registration successful! Redirecting to login...</span>
                     </div>
                 </v-window-item>
             </v-window>
@@ -164,7 +164,7 @@ const register = async () => {
                 </v-btn>
                 <v-spacer></v-spacer>
                 <v-btn
-                    v-if="step < 3"
+                    v-if="step < 2"
                     color="blue-darken-3"
                     size="large"
                     variant="text"
@@ -178,7 +178,8 @@ const register = async () => {
                     color="blue-darken-3"
                     size="large"
                     variant="tonal"
-                    :disabled="!isFormValid"
+                    :disabled="!isFormValid || isLoading"
+                    :loading="isLoading"
                     @click="register"
                 >
                     Sign Up

@@ -1,6 +1,6 @@
 <script setup>
-import Tag from "../components/Tag.vue"
-import Article from "../components/Article.vue"
+import Tag from "@/components/Tag.vue"
+import Article from "@/components/Article.vue"
 import {onMounted, ref} from "vue"
 import {useRouter} from "vue-router"
 

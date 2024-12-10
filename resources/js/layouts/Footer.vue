@@ -54,19 +54,3 @@ const currentYear = computed(() => {
         </v-container>
     </v-footer>
 </template>
-
-<style scoped>
-.v-card-text p:first-child {
-    padding-bottom: 10px;
-    font-size: medium;
-}
-
-.footer-card {
-    transition: transform 0.3s, border-color 0.3s;
-    border: 2px solid transparent;
-}
-
-.footer-card:hover {
-    border-color: #2196F3;
-}
-</style>

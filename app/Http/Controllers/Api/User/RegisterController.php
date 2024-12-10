@@ -30,14 +30,14 @@ class RegisterController extends Controller
             $user = User::query()->create($validated);
 
             return response()->json([
-                'message' => 'User created',
+                'message' => trans('auth.register.success'),
                 'data' => new UserResource($user)
             ], ResponseAlias::HTTP_CREATED);
         } catch (Throwable $e) {
             Log::error('Registration error: ' . $e->getMessage());
 
             return response()->json([
-                'error' => 'Registration error',
+                'error' => trans('auth.register.failed'),
             ], ResponseAlias::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

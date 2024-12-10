@@ -1,6 +1,6 @@
 <script setup>
 import {ref} from 'vue'
-import trediumLogo from '../assets/images/tredium_logo_tp_white.png'
+import trediumLogo from '@/assets/images/tredium_logo_tp_white.png'
 
 const tab = ref(null)
 
@@ -50,11 +50,3 @@ const sidebarDrawer = () => {
         </v-container>
     </v-app-bar>
 </template>
-
-<style scoped>
-.v-app-bar {
-    position: fixed !important;
-    top: 0;
-    z-index: 10;
-}
-</style>

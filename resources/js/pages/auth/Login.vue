@@ -1,34 +1,38 @@
 <script setup>
-import {ref} from 'vue'
-import {useAuthStore} from '../stores/auth'
+import {reactive, ref} from 'vue'
+import {useAuthStore} from '@/stores/auth.js'
 import {useRouter} from 'vue-router'
-import trediumLogo from '../assets/images/tredium_logo_tp_white.png'
+import trediumLogo from '@/assets/images/tredium_logo_tp_white.png'
 import {useToast} from 'vue-toastification'
 
 const authStore = useAuthStore()
 const router = useRouter()
 const toast = useToast()
 
-const passwordVisible = ref(false)
-const email = ref('')
-const password = ref('')
+const isVisible = ref(false)
+const isLoading = ref(false)
 
-const goToRegister = () => router.push({name: 'register'})
-const goToHome = () => router.push({name: 'home'})
+const form = reactive({
+    email: null,
+    password: null
+})
 
 const login = async () => {
+    isLoading.value = true
     try {
         await authStore.login({
-            email: email.value,
-            password: password.value
+            email: form.email,
+            password: form.password
         });
 
-        await goToHome()
+        await router.push({name: 'home'})
     } catch (error) {
         console.log(error.message)
         const errorMessage = error.response?.error || 'Произошла ошибка при входе в аккаунт';
 
         toast.error(errorMessage)
+    } finally {
+        isLoading.value = false
     }
 }
 </script>
@@ -51,7 +55,7 @@ const login = async () => {
 
             <v-form>
                 <v-text-field
-                    v-model="email"
+                    v-model="form.email"
                     label="Email"
                     type="email"
                     density="comfortable"
@@ -59,20 +63,20 @@ const login = async () => {
                 ></v-text-field>
 
                 <v-text-field
-                    v-model="password"
+                    v-model="form.password"
                     label="Password"
                     density="comfortable"
                     hint="At least 8 characters"
                     required
-                    :type="passwordVisible ? 'text' : 'password'"
-                    :append-icon="passwordVisible ? 'mdi-eye-off' : 'mdi-eye'"
-                    @click:append="passwordVisible = !passwordVisible"
+                    :type="isVisible ? 'text' : 'password'"
+                    :append-icon="isVisible ? 'mdi-eye-off' : 'mdi-eye'"
+                    @click:append="isVisible = !isVisible"
                 ></v-text-field>
 
                 <v-btn
                     elevation="0"
                     class="text-caption text-blue mb-5"
-                    href="#"
+                    :to="{ name: 'resetLink'}"
                 >
                     Forgot login password?
                 </v-btn>
@@ -82,6 +86,8 @@ const login = async () => {
                     color="blue-darken-3"
                     size="large"
                     variant="tonal"
+                    :loading="isLoading"
+                    :disabled="isLoading"
                     block
                     @click="login"
                 >
@@ -94,7 +100,7 @@ const login = async () => {
                     v-if="!authStore.isAuthenticated"
                     variant="plain"
                     class="text-blue"
-                    @click="goToRegister"
+                    :to="{ name: 'register' }"
                 >
                     Sign up now
                     <v-icon icon="mdi-chevron-right"></v-icon>
@@ -103,7 +109,3 @@ const login = async () => {
         </v-card>
     </v-container>
 </template>
-
-<style scoped>
-/* Дополнительные стили для страницы логина */
-</style>

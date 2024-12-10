@@ -1,5 +1,8 @@
 <script setup>
 import {onMounted, ref} from 'vue'
+import {useToast} from "vue-toastification"
+
+const toast = useToast()
 
 const props = defineProps({
     slug: {
@@ -13,8 +16,6 @@ const isLoading = ref(false)
 const subject = ref('')
 const body = ref('')
 const submitting = ref(false)
-const error = ref(null)
-const success = ref(null)
 
 const loadArticle = async () => {
     isLoading.value = true
@@ -25,6 +26,7 @@ const loadArticle = async () => {
     } catch (error) {
         console.error("Article detail loading error: ", error)
         error.value = "Article detail loading error."
+        toast.error(error)
     } finally {
         isLoading.value = false;
     }
@@ -32,15 +34,13 @@ const loadArticle = async () => {
 
 const submitComment = async () => {
     submitting.value = true
-    error.value = null
-    success.value = null
 
     try {
         const response = await axios.post(`/api/articles/${props.slug}/comment`, {
             subject: subject.value,
             body: body.value
         })
-        success.value = response.data.message
+        toast.success(response.data.message)
         subject.value = ""
         body.value = ""
     } catch (err) {
@@ -83,14 +83,14 @@ onMounted(loadArticle)
                     <v-card-text>
                         <v-form>
                             <v-text-field
-                                label="Тема сообщения"
+                                label="Subject"
                                 v-model="subject"
                                 :disabled="submitting"
                                 outlined
                                 required
                             ></v-text-field>
                             <v-textarea
-                                label="Сообщение"
+                                label="Message"
                                 v-model="body"
                                 :disabled="submitting"
                                 outlined
@@ -106,7 +106,7 @@ onMounted(loadArticle)
                             variant="tonal"
                             @click="submitComment"
                         >
-                            Отправить
+                            Send message
                         </v-btn>
                         <v-progress-circular
                             v-if="submitting"
@@ -116,27 +116,7 @@ onMounted(loadArticle)
                         ></v-progress-circular>
                     </v-card-actions>
                 </v-card>
-
-                <v-alert v-if="error" type="error">{{ error }}</v-alert>
-                <v-alert v-if="success" type="success">{{ success }}</v-alert>
             </v-col>
         </v-row>
     </v-container>
 </template>
-
-<style scoped>
-.article-detail {
-    margin-bottom: 32px;
-    transition: transform 0.3s, border-color 0.3s;
-}
-
-.article-detail:hover {
-    border-color: #2196F3;
-}
-
-.article-content {
-    white-space: pre-wrap;
-    line-height: 1.6;
-    font-size: 16px;
-}
-</style>

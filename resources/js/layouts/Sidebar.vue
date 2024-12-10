@@ -1,12 +1,9 @@
 <script setup>
-import {useAuthStore} from '../stores/auth'
+import {useAuthStore} from '@/stores/auth.js'
 import {useRouter} from "vue-router"
 
 const authStore = useAuthStore()
 const router = useRouter()
-
-const goToProfile = () => router.push({name: 'profile'}) //todo make user profile
-const login = () => router.push({name: 'login'})
 const logout = () => {
     authStore.logout()
     router.push({name: 'home'})
@@ -27,7 +24,7 @@ const logout = () => {
             <v-divider></v-divider>
 
             <v-list dense nav>
-                <v-list-item prepend-icon="mdi-folder" title="Profile" @click="goToProfile"></v-list-item>
+                <v-list-item prepend-icon="mdi-folder" title="Profile" :to="{name: 'profile'}"></v-list-item>
                 <v-list-item prepend-icon="mdi-account-multiple" title="Shared with me"></v-list-item>
                 <v-list-item prepend-icon="mdi-star" title="Starred"></v-list-item>
             </v-list>
@@ -38,15 +35,17 @@ const logout = () => {
 
             <div class="mt-5 mb-5 text-center">
                 <v-btn
+                    width="200"
                     v-if="!authStore.isAuthenticated"
                     color="blue-darken-3"
                     size="large"
                     variant="tonal"
-                    @click="login"
+                    :to="{name: 'login'}"
                 >
                     Login
                 </v-btn>
                 <v-btn
+                    width="200"
                     v-if="authStore.isAuthenticated"
                     color="blue-darken-3"
                     size="large"
@@ -59,9 +58,3 @@ const logout = () => {
         </div>
     </div>
 </template>
-
-<style scoped>
-.v-btn {
-    width: 200px;
-}
-</style>
