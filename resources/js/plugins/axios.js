@@ -1,5 +1,5 @@
 const axiosInstance = axios.create({
-    baseURL: process.env.VUE_APP_API_URL || 'http://localhost:8000', // Базовый URL для API
+    baseURL: 'http://localhost:8000', // Базовый URL для API
     timeout: 10000, // Максимальное время ожидания запроса (в миллисекундах)
     headers: {
         'Content-Type': 'application/json', // Заголовок по умолчанию

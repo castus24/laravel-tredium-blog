@@ -1,11 +1,14 @@
 <script setup>
-import {ref} from 'vue'
+import {computed, ref} from 'vue'
 import trediumLogo from '@/assets/images/tredium_logo_tp_white.png'
+import {useAuthStore} from "@/stores/auth.js"
+
+const authStore = useAuthStore()
+const user = computed(() => authStore.userData)
 
 const tab = ref(null)
 
 const emit = defineEmits(['sidebar-drawer'])
-
 const sidebarDrawer = () => {
     emit('sidebar-drawer')
 };
@@ -43,7 +46,14 @@ const sidebarDrawer = () => {
                         icon
                         @click="sidebarDrawer"
                     >
-                        <v-icon>mdi-account</v-icon>
+                        <div v-if="user">
+                            <v-avatar size="32">
+                                <v-img :src="user.avatar" cover />
+                            </v-avatar>
+                        </div>
+                        <div v-else>
+                            <v-icon>mdi-account</v-icon>
+                        </div>
                     </v-tab>
                 </v-tabs>
             </v-row>

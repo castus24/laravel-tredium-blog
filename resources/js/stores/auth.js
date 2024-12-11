@@ -4,7 +4,7 @@ import {ref} from 'vue'
 export const useAuthStore = defineStore('auth', () => {
     const userData = ref(null)
     const isAuthenticated = ref(false)
-    const token = ref(null)
+    const token = ref(localStorage.getItem('auth_token'))
 
     const login = async (userData) => {
         try {
@@ -60,6 +60,7 @@ export const useAuthStore = defineStore('auth', () => {
                 }
             });
 
+            isAuthenticated.value = true
             userData.value = data.data
             return data.data
         } catch (error) {
@@ -67,6 +68,25 @@ export const useAuthStore = defineStore('auth', () => {
             logout()
         }
     };
+
+    const initializeAuth = async () => {
+        try {
+            if (token.value) {
+                await fetchUser()
+            }
+        } catch (error) {
+            console.error('Initialization error:', error)
+            logout()
+        }
+    };
+
+    initializeAuth()
+        .then(() => {
+            console.log('Auth initialized successfully')
+        })
+        .catch((error) => {
+            console.error('Error during auth initialization:', error)
+        });
 
     return {
         userData,
