@@ -18,8 +18,8 @@ const body = ref('')
 const submitting = ref(false)
 
 const loadArticle = async () => {
-    isLoading.value = true
     try {
+        isLoading.value = true
         const response = await axios.get(`/api/articles/${props.slug}`)
         article.value = response.data.data
         isLoading.value = false

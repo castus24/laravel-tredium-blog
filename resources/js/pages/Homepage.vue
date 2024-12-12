@@ -15,8 +15,8 @@ const perPage = ref(6)
 const isLoading = ref(false);
 
 const loadArticles = async () => {
-    isLoading.value = true;
     try {
+        isLoading.value = true;
         const response = await axios.get(`/api/articles?per_page=${perPage.value}`)
         articles.value = response.data.data;
     } catch (error) {

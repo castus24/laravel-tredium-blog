@@ -5,6 +5,7 @@ export const useAuthStore = defineStore('auth', () => {
     const userData = ref(null)
     const isAuthenticated = ref(false)
     const token = ref(localStorage.getItem('auth_token'))
+    const isLoading = ref(false)
 
     const login = async (userData) => {
         try {
@@ -47,8 +48,8 @@ export const useAuthStore = defineStore('auth', () => {
 
     const fetchUser = async () => {
         try {
-            const token = localStorage.getItem('auth_token')
-            if (!token) {
+            isLoading.value = true
+            if (!token.value) {
                 console.error('No token found');
                 logout();
                 return;
@@ -56,7 +57,7 @@ export const useAuthStore = defineStore('auth', () => {
 
             const {data} = await axios.get('/api/user', {
                 headers: {
-                    Authorization: `Bearer ${token}`
+                    Authorization: `Bearer ${token.value}`
                 }
             });
 
@@ -66,6 +67,8 @@ export const useAuthStore = defineStore('auth', () => {
         } catch (error) {
             console.error('Fetch user error:', error)
             logout()
+        } finally {
+            isLoading.value = false
         }
     };
 
@@ -92,6 +95,7 @@ export const useAuthStore = defineStore('auth', () => {
         userData,
         isAuthenticated,
         token,
+        isLoading,
         login,
         logout,
         register,

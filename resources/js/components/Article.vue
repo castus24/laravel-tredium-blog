@@ -12,8 +12,8 @@ const isSelected = ref(false)
 const isLoading = ref(false)
 
 const like = async () => {
-    // isLoading.value = true;
     // try {
+    // isLoading.value = true;
     //     const response = await axios.get(`/api/article`);
     //     this.articles = response.data.data;
     // } catch (error) {

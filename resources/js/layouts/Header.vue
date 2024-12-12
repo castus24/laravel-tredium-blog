@@ -2,6 +2,7 @@
 import {computed, ref} from 'vue'
 import trediumLogo from '@/assets/images/tredium_logo_tp_white.png'
 import {useAuthStore} from "@/stores/auth.js"
+import Avatar from "@/components/profile/Avatar.vue";
 
 const authStore = useAuthStore()
 const user = computed(() => authStore.userData)
@@ -47,9 +48,10 @@ const sidebarDrawer = () => {
                         @click="sidebarDrawer"
                     >
                         <div v-if="user">
-                            <v-avatar size="32">
-                                <v-img :src="user.avatar" cover />
-                            </v-avatar>
+                            <Avatar
+                                :avatar="user.avatar"
+                                :size="32"
+                            />
                         </div>
                         <div v-else>
                             <v-icon>mdi-account</v-icon>

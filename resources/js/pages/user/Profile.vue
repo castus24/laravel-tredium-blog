@@ -1,15 +1,28 @@
 <script setup>
-import {computed, reactive, ref} from "vue"
+import {computed, ref} from "vue"
+import {useAuthStore} from "@/stores/auth.js"
+import {useRouter} from "vue-router"
 import ProfileEdit from "@/components/profile/ProfileEdit.vue"
 import Profile from "@/components/profile/Profile.vue"
 import AvatarUpload from "@/components/profile/AvatarUpload.vue"
-import{useAuthStore} from "@/stores/auth.js"
+import Avatar from "@/components/profile/Avatar.vue"
 
 const authStore = useAuthStore()
+const router = useRouter()
+
+const isLoading = computed(() => authStore.isLoading);
 const user = computed(() => authStore.userData)
 
 const tab = ref('option-1')
 const showEditModal = ref(false)
+
+const openEditModal = () => {
+    showEditModal.value = true;
+};
+
+const closeEditModal = () => {
+    showEditModal.value = false;
+};
 
 const updateUser = (updatedData) => {
     if (authStore.userData) {
@@ -26,8 +39,15 @@ const updateAvatar = (avatarUrl) => {
 
 <template>
     <v-container class="mt-5">
-        <v-card>
-            <v-card :title="user.name" color="blue-darken-1" variant="tonal"></v-card>
+        <v-card v-if="isLoading">
+            <v-card-text class="text-center">
+                <v-progress-circular indeterminate color="blue-darken-3" size="64"></v-progress-circular>
+                <p>Loading user data...</p>
+            </v-card-text>
+        </v-card>
+
+        <v-card v-else>
+            <v-card :title="user.name" color="blue-darken-1" variant="tonal" />
 
             <div class="d-flex flex-row">
                 <v-tabs
@@ -57,14 +77,14 @@ const updateAvatar = (avatarUrl) => {
                                         color="blue-darken-3"
                                         size="large"
                                         variant="tonal"
-                                        @click="showEditModal = true"
+                                        @click="openEditModal"
                                     ></v-btn>
 
                                     <v-dialog v-model="showEditModal" max-width="600">
                                         <ProfileEdit
                                             :user="user"
                                             @update-user="updateUser"
-                                            @close="showEditModal = false"
+                                            @close="closeEditModal"
                                         />
                                     </v-dialog>
                                 </v-col>
@@ -73,10 +93,22 @@ const updateAvatar = (avatarUrl) => {
                     </v-tabs-window-item>
 
                     <v-tabs-window-item value="option-2">
-                        <AvatarUpload
-                            :current-avatar="user.avatar"
-                            @avatar-updated="updateAvatar"
-                        />
+                        <v-container min-width="700">
+                            <v-row>
+                                <v-card-item>
+                                    <Avatar
+                                        :avatar="user.avatar"
+                                        :size="120"
+                                    />
+                                </v-card-item>
+                            </v-row>
+                            <v-row>
+                                <AvatarUpload
+                                    :current-avatar="user.avatar"
+                                    @avatar-updated="updateAvatar"
+                                />
+                            </v-row>
+                        </v-container>
                     </v-tabs-window-item>
 
                     <v-tabs-window-item value="option-3">

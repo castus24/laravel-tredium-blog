@@ -1,4 +1,6 @@
 <script setup>
+import Avatar from "@/components/profile/Avatar.vue";
+
 defineProps({
     user: Object
 })
@@ -8,13 +10,10 @@ defineProps({
     <v-container>
         <v-row>
             <v-col>
-                <v-avatar size="120">
-                    <v-img
-                        :src="user.avatar"
-                        alt="User Avatar"
-                        cover
-                    />
-                </v-avatar>
+                <Avatar
+                    :avatar="user.avatar"
+                    :size="120"
+                />
             </v-col>
         </v-row>
             <v-col>

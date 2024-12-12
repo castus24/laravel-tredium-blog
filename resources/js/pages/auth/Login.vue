@@ -18,8 +18,8 @@ const form = reactive({
 })
 
 const login = async () => {
-    isLoading.value = true
     try {
+        isLoading.value = true
         await authStore.login({
             email: form.email,
             password: form.password

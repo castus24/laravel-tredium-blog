@@ -11,8 +11,8 @@ const form = reactive({
 const isLoading = ref(false)
 
 const submit = async() => {
-    isLoading.value = true
     try {
+        isLoading.value = true
         const response = await axios.post('/api/user/password/email', form)
 
         if (response){

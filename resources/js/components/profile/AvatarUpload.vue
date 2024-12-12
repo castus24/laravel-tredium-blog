@@ -38,28 +38,34 @@ const submit = async() => {
 </script>
 
 <template>
-    <v-container width="500">
+    <v-container>
         <v-form>
-            <v-file-input
-                v-model="form.avatar"
-                label="Avatar"
-                placeholder="Pick an avatar"
-                accept="image/*"
-                prepend-icon="mdi-camera"
-                outlined
-                required
-            />
-            <v-btn
-                class="text-center"
-                color="blue-darken-3"
-                size="large"
-                variant="tonal"
-                :disabled="isLoading"
-                :loading="isLoading"
-                @click="submit"
-            >
-                Upload
-            </v-btn>
+            <v-row>
+                <v-col>
+                    <v-file-input
+                        v-model="form.avatar"
+                        label="Avatar"
+                        placeholder="Pick an avatar"
+                        accept="image/*"
+                        prepend-icon="mdi-camera"
+                        outlined
+                        required
+                    />
+                </v-col>
+                <v-col>
+                    <v-btn
+                        class="text-center"
+                        color="blue-darken-3"
+                        size="large"
+                        variant="tonal"
+                        :disabled="isLoading"
+                        :loading="isLoading"
+                        @click="submit"
+                    >
+                        Upload
+                    </v-btn>
+                </v-col>
+            </v-row>
         </v-form>
     </v-container>
 </template>
