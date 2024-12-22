@@ -5,15 +5,14 @@ namespace App\Http\Controllers\Api\Article;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ArticleResource;
 use App\Models\Article;
+use Illuminate\Http\JsonResponse;
 
 class ArticleShowController extends Controller
 {
-    public function __invoke(string $slug): ArticleResource
+    public function __invoke(Article $article): JsonResponse
     {
-        $article = Article::query()
-            ->where('slug', $slug)
-            ->first();
-
-        return new ArticleResource($article);
+        return response()->json([
+           'data' => new ArticleResource($article)
+        ]);
     }
 }

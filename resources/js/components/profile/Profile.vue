@@ -8,21 +8,17 @@ defineProps({
 
 <template>
     <v-container>
-        <v-row>
-            <v-col>
-                <Avatar
-                    :avatar="user.avatar"
-                    :size="120"
-                />
-            </v-col>
-        </v-row>
-            <v-col>
-                {{ user.name }}
-            </v-col>
-        <v-row>
-            <v-col>
-                {{ user.email }}
-            </v-col>
-        </v-row>
+        <v-col v-if="user.avatar">
+            <Avatar
+                :avatar="user.avatar"
+                :size="120"
+            />
+        </v-col>
+        <v-col>
+            {{ user.name }}
+        </v-col>
+        <v-col>
+            {{ user.email }}
+        </v-col>
     </v-container>
 </template>

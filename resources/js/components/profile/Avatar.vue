@@ -13,7 +13,3 @@ defineProps({
         />
     </v-avatar>
 </template>
-
-<style scoped>
-
-</style>

@@ -1,5 +1,5 @@
 <script setup>
-import Article from "../components/Article.vue"
+import ArticleForm from "../components/ArticleForm.vue"
 import {onMounted, ref} from "vue"
 import {useRouter} from "vue-router"
 
@@ -51,12 +51,23 @@ onMounted(loadArticles)
     <v-container class="mt-3 mb-6">
         <v-row>
             <v-col
+                v-if="isLoading"
+                cols="12"
+                sm="12"
+            >
+                <v-skeleton-loader
+                    class="mx-auto border"
+                    type="image, article"
+                ></v-skeleton-loader>
+            </v-col>
+            <v-col
+                v-else
                 cols="12"
                 sm="4"
                 v-for="(article, index) in articles"
                 :key="index"
             >
-                <Article
+                <ArticleForm
                     :article="article"
                     @click="goToArticle(article.slug)"
                 />

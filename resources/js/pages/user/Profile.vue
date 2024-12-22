@@ -42,7 +42,7 @@ const updateAvatar = (avatarUrl) => {
         <v-card v-if="isLoading">
             <v-card-text class="text-center">
                 <v-progress-circular indeterminate color="blue-darken-3" size="64"></v-progress-circular>
-                <p>Loading user data...</p>
+                <p>Loading data...</p>
             </v-card-text>
         </v-card>
 
@@ -94,7 +94,7 @@ const updateAvatar = (avatarUrl) => {
 
                     <v-tabs-window-item value="option-2">
                         <v-container min-width="700">
-                            <v-row>
+                            <v-row v-if="user.avatar">
                                 <v-card-item>
                                     <Avatar
                                         :avatar="user.avatar"

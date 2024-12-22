@@ -25,10 +25,8 @@ const login = async () => {
             password: form.password
         });
 
-        await router.push({name: 'home'})
     } catch (error) {
-        console.log(error.message)
-        const errorMessage = error.response?.error || 'Произошла ошибка при входе в аккаунт';
+        const errorMessage = error.response?.error || 'Account login error';
 
         toast.error(errorMessage)
     } finally {

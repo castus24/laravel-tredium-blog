@@ -21,8 +21,8 @@ class ArticleFactory extends Factory
         $title = $this->faker->sentence();
         $content = $this->faker->text(rand(200, 300));
         $slug = Str::slug($title);
-        $mainImageUrl = Article::MAIN_IMAGE;
-        $thumbnailImageUrl = Article::THUMBNAIL;
+        $mainImageUrl = 'https://picsum.photos/800/600';
+        $thumbnailImageUrl = 'https://picsum.photos/400/300';
         $published_at = $this->faker->dateTimeBetween('-1 year');
 
         return [

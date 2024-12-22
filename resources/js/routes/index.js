@@ -1,70 +1,25 @@
-import Homepage from '../pages/Homepage.vue'
-import ArticleCatalog from '../pages/articles/ArticleCatalog.vue';
-import ArticleDetail from '../pages/articles/ArticleDetail.vue';
-import Login from '../pages/auth/Login.vue';
-import Register from '../pages/auth/Register.vue';
-import PasswordForgot from "../pages/auth/password/PasswordForgot.vue";
-import PasswordReset from "../pages/auth/password/PasswordReset.vue";
-import NotFound404 from "../pages/NotFound404.vue";
-import PasswordWrapper from "../pages/auth/password/PasswordWrapper.vue";
-import Profile from "../pages/user/Profile.vue";
+import {createRouter, createWebHistory} from 'vue-router'
+import {useAuthStore} from '@/stores/auth'
+import UserLayout from "@/components/layouts/UserLayout.vue"
+import AdminLayout from "@/components/layouts/AdminLayout.vue"
 
-import { createRouter, createWebHistory } from 'vue-router';
-import { useAuthStore } from '../stores/auth';
+import {userRoutes} from '@/routes/user'
+import {adminRoutes} from '@/routes/admin'
+import {errorRoutes} from '@/routes/error'
 
 const routes = [
     {
         path: '/',
-        name: 'home',
-        component: Homepage,
+        component: UserLayout,
+        children: userRoutes,
     },
     {
-        path: '/articles',
-        name: 'articles',
-        component: ArticleCatalog,
+        path: '/admin',
+        component: AdminLayout,
+        children: adminRoutes,
+        meta: {requiresAdmin: true},
     },
-    {
-        path: '/articles/:slug',
-        name: 'articleDetail',
-        component: ArticleDetail,
-        props: true,
-    },
-    {
-        path: "/login",
-        name: "login",
-        component: Login
-    },
-    {
-        path: "/register",
-        name: "register",
-        component: Register
-    },
-    {
-        path: '/password',
-        component: PasswordWrapper,
-        children: [
-            {
-                path: 'email',
-                name: 'resetLink',
-                component: PasswordForgot,
-            },
-            {
-                path: 'reset',
-                name: 'passwordReset',
-                component: PasswordReset,
-            },
-        ],
-    },
-    {
-        path: "/profile",
-        name: "profile",
-        component: Profile
-    },
-    {
-        path: '/:pathMatch(.*)*',
-        name: '404',
-        component: NotFound404,
-    },
+    ...errorRoutes,
 ];
 
 const router = createRouter({
@@ -72,14 +27,26 @@ const router = createRouter({
     routes,
 });
 
-router.beforeEach((to, from, next) => {
-    const authStore = useAuthStore();
+router.beforeEach(async (to, from, next) => {
+    const authStore = useAuthStore()
 
-    if (to.meta.requiresAuth && !authStore.isAuthenticated) {
-        next({ name: 'login' });
+    if (!authStore.isAuthenticated && !authStore.isLoading) {
+        await authStore.initializeAuth();
+    }
+
+    if (to.meta.requiresAdmin) {
+        if (!authStore.isAuthenticated) {
+            next({name: 'login'});
+        } else if (!authStore.isAdmin) {
+            next({name: 'home'});
+        } else {
+            next();
+        }
+    } else if (to.meta.requiresAuth && !authStore.isAuthenticated) {
+        next({name: 'login'});
     } else {
         next();
     }
 });
 
-export default router;
+export default router

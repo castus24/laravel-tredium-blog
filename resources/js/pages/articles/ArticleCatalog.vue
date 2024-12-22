@@ -1,7 +1,7 @@
 <script setup>
-import Tag from "@/components/Tag.vue"
-import Article from "@/components/Article.vue"
-import {onMounted, ref} from "vue"
+import TagForm from "@/components/TagForm.vue"
+import ArticleForm from "@/components/ArticleForm.vue"
+import {onMounted, ref, watch} from "vue"
 import {useRouter} from "vue-router"
 
 const router = useRouter()
@@ -14,10 +14,10 @@ const perPage = ref(10)
 const loadAllArticles = async () => {
     try {
         isLoading.value = true;
-        const response = await axios.get(`/api/articles?page=${currentPage.value}&per_page=${perPage.value}`)
-        articles.value = response.data.data
-        currentPage.value = response.data.current_page
-        total.value = response.data.last_page
+        const {data} = await axios.get(`/api/articles?page=${currentPage.value}&per_page=${perPage.value}`)
+        articles.value = data.data
+        currentPage.value = data.meta.current_page
+        total.value = data.meta.last_page
     } catch (error) {
         console.error("Articles loading error: ", error)
     } finally {
@@ -25,9 +25,9 @@ const loadAllArticles = async () => {
     }
 };
 
-const onPageChange = () => {
-    loadAllArticles()
-};
+watch(currentPage, () => {
+    loadAllArticles();
+});
 
 const goToArticle = (slug) => {
     router.push({name: "articleDetail", params: {slug}})
@@ -39,11 +39,25 @@ onMounted(loadAllArticles)
 <template>
     <v-container class="mt-3 mb-6">
         <v-row>
-            <v-col cols="12" sm="4">
-                <Tag/>
+            <v-col v-if="isLoading" cols="12" sm="4">
+                <v-progress-linear
+                    :size="50"
+                    color="blue-darken-3"
+                    indeterminate
+                ></v-progress-linear>
+            </v-col>
+            <v-col v-else cols="12" sm="4">
+                <TagForm />
             </v-col>
 
-            <v-col cols="12" sm="8">
+            <v-col v-if="isLoading" cols="12" sm="8">
+                <v-skeleton-loader
+                    class="mx-auto border"
+                    height="450"
+                    type="image, article"
+                ></v-skeleton-loader>
+            </v-col>
+            <v-col v-else cols="12" sm="8">
                 <v-row>
                     <v-col
                         cols="12"
@@ -51,7 +65,7 @@ onMounted(loadAllArticles)
                         :key="index"
                         class="mb-4"
                     >
-                        <Article
+                        <ArticleForm
                             :article="article"
                             @click="goToArticle(article.slug)"
                         />
@@ -60,7 +74,6 @@ onMounted(loadAllArticles)
             </v-col>
         </v-row>
 
-        <!--todo make paginate component -->
         <v-row justify="center">
             <v-col cols="12" class="text-center">
                 <v-pagination
@@ -69,7 +82,6 @@ onMounted(loadAllArticles)
                     next-icon="mdi-menu-right"
                     prev-icon="mdi-menu-left"
                     class="mb-5"
-                    @update:model-value="onPageChange"
                 ></v-pagination>
             </v-col>
         </v-row>

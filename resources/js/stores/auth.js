@@ -1,36 +1,44 @@
 import {defineStore} from 'pinia'
 import {ref} from 'vue'
+import {useRouter} from "vue-router"
+import { useToast } from 'vue-toastification';
 
 export const useAuthStore = defineStore('auth', () => {
+    const router = useRouter()
+    const toast = useToast();
     const userData = ref(null)
     const isAuthenticated = ref(false)
     const token = ref(localStorage.getItem('auth_token'))
     const isLoading = ref(false)
+    const isAdmin = ref(false)
 
     const login = async (userData) => {
         try {
-            const {data} = await axios.post('/api/user/login', userData)
+            const {data} = await axios.post('/api/users/login', userData)
             token.value = data.data.token
-            if (data.data.token) {
-                localStorage.setItem('auth_token', data.data.token)
+            if (token.value) {
+                localStorage.setItem('auth_token', token.value)
             }
 
             await fetchUser()
             isAuthenticated.value = true
 
+            await router.push({name: 'home'})
             return data
         } catch (error) {
             console.error('Login error:', error)
+            toast.error('Login failed. Please try again.');
             throw error
         }
     };
 
     const register = async (userData) => {
         try {
-            const {data} = await axios.post('/api/user/register', userData)
+            const {data} = await axios.post('/api/users/register', userData)
             return data
         } catch (error) {
             console.error('Register error:', error)
+            toast.error('Registration failed. Please try again.');
             throw error
         }
     };
@@ -43,6 +51,7 @@ export const useAuthStore = defineStore('auth', () => {
             isAuthenticated.value = false
         } catch (error) {
             console.error('Logout error:', error)
+            toast.error('Logout failed. Please try again.');
         }
     };
 
@@ -50,12 +59,12 @@ export const useAuthStore = defineStore('auth', () => {
         try {
             isLoading.value = true
             if (!token.value) {
-                console.error('No token found');
-                logout();
-                return;
+                console.error('No token found')
+                logout()
+                return
             }
 
-            const {data} = await axios.get('/api/user', {
+            const {data} = await axios.get('/api/users', {
                 headers: {
                     Authorization: `Bearer ${token.value}`
                 }
@@ -63,9 +72,12 @@ export const useAuthStore = defineStore('auth', () => {
 
             isAuthenticated.value = true
             userData.value = data.data
-            return data.data
+            isAdmin.value = userData.value.roles.some(role => role.name === 'admin')
+
+            return userData.value
         } catch (error) {
             console.error('Fetch user error:', error)
+            toast.error('Failed to fetch user data.');
             logout()
         } finally {
             isLoading.value = false
@@ -79,27 +91,22 @@ export const useAuthStore = defineStore('auth', () => {
             }
         } catch (error) {
             console.error('Initialization error:', error)
+            toast.error('Failed to initialize auth.');
             logout()
         }
     };
 
-    initializeAuth()
-        .then(() => {
-            console.log('Auth initialized successfully')
-        })
-        .catch((error) => {
-            console.error('Error during auth initialization:', error)
-        });
-
     return {
         userData,
-        isAuthenticated,
         token,
+        isAdmin,
+        isAuthenticated,
         isLoading,
         login,
         logout,
         register,
         fetchUser,
+        initializeAuth,
     };
 });
 

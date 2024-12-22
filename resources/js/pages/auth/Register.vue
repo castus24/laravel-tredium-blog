@@ -72,6 +72,9 @@ const register = async () => {
         const errorMessage = error.response?.error || 'Произошла ошибка регистрации'
 
         toast.error(errorMessage)
+        setTimeout(() => {
+            router.push({ name: 'register' })
+        }, 2000);
     }
 }
 </script>

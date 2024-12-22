@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\Api\Article;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\ArticleResource;
+use App\Http\Resources\ArticleShowResource;
 use App\Models\Article;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class ArticleAllController extends Controller
 {
@@ -14,10 +15,11 @@ class ArticleAllController extends Controller
     {
         $perPage = $request->input('per_page', 10);
 
-        $articles = Article::query()
-            ->orderByDesc('published_at')
-            ->paginate($perPage);
-
-        return ArticleResource::collection($articles);
+        return ArticleShowResource::collection(
+            QueryBuilder::for(Article::class)
+                ->allowedFilters(Article::getAllowedFilters())
+                ->allowedSorts(Article::getAllowedSorts())
+                ->paginate($request->input('itemsPerPage', $perPage))
+        );
     }
 }

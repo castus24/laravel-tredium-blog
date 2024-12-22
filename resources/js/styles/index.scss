@@ -1,8 +1,8 @@
 @import "app";
 
-@import "layouts/sidebar";
-@import "layouts/header";
-@import "layouts/footer";
+@import "user/common/sidebar";
+@import "user/common/header";
+@import "user/common/footer";
 
 @import "article";
 @import "tag";

@@ -29,7 +29,7 @@ const submit = async () => {
         }
         console.log(form)
 
-        const response = await axios.post('/api/user/password/reset', form)
+        const response = await axios.post('/api/users/password/reset', form)
 
         toast.success(response.data.message)
         await router.push({name: 'login'})

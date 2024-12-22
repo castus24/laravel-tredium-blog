@@ -1,14 +1,14 @@
-import './bootstrap';
+import './bootstrap'
 
-import { createApp } from 'vue';
-import vuetify from "./plugins/vuetify.js";
-import routes from './routes';
-import { createPinia } from 'pinia';
+import {createApp} from 'vue'
+import vuetify from "./plugins/vuetify.js"
+import routes from './routes/index.js'
+import {createPinia} from 'pinia'
 
-import toast, { POSITION } from 'vue-toastification';
-import 'vue-toastification/dist/index.css';
+import toast, {POSITION} from 'vue-toastification'
+import 'vue-toastification/dist/index.css'
 
-const pinia = createPinia();
+const pinia = createPinia()
 
 const toastOptions = {
     position: POSITION.TOP_RIGHT,

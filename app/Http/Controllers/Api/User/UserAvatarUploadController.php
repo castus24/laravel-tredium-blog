@@ -23,20 +23,16 @@ class UserAvatarUploadController extends Controller
         /** @var User $user */
         $user = $request->user();
 
-        if ($user->hasMedia('avatars')) {
-            $user->clearMediaCollection('avatars');
-        }
-
         try {
             $user->addMediaFromRequest('avatar')
                 ->toMediaCollection('avatars', 'public_images');
         } catch (FileDoesNotExist $e) {
-            Log::info($e->getMessage());
+            Log::error($e->getMessage());
             return response()->json([
                 'message' => trans('user.avatar.not_exist'),
             ], 422);
         } catch (FileIsTooBig $e) {
-            Log::info($e->getMessage());
+            Log::error($e->getMessage());
             return response()->json([
                 'message' => trans('user.avatar.too_big'),
             ], 422);

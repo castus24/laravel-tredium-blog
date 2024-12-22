@@ -12,4 +12,19 @@ class Tag extends Model
     protected $fillable = [
         'label'
     ];
+
+    public static function getAllowedFilters(): array
+    {
+        return [
+            //
+        ];
+    }
+
+    public static function getAllowedSorts(): array
+    {
+        return [
+            'id',
+            'label',
+        ];
+    }
 }

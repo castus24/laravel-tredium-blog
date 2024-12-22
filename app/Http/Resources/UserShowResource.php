@@ -9,6 +9,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property int $id
  * @property string $name
  * @property string $email
+ * @property RoleResource $roles
  * @method getFirstMediaUrl(string $avatars)
  */
 class UserShowResource extends JsonResource
@@ -20,6 +21,7 @@ class UserShowResource extends JsonResource
             'name' => $this->name,
             'email' => $this->email,
             'avatar' => $this->getFirstMediaUrl('avatars'),
+            'roles' => RoleResource::collection($this->roles),
         ];
     }
 }

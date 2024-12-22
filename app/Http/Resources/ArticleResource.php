@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -10,8 +11,6 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property string $title
  * @property string $content
  * @property string $slug
- * @property string $main_image
- * @property string $thumbnail_image
  * @property string $published_at
  */
 class ArticleResource extends JsonResource
@@ -28,9 +27,7 @@ class ArticleResource extends JsonResource
             'title' => $this->title,
             'content' => $this->content,
             'slug' => $this->slug,
-            'main_image' => $this->main_image,
-            'thumbnail_image' => $this->thumbnail_image,
-            'published_at' => $this->published_at,
+            'published_at' => Carbon::parse($this->published_at)->format('d.m.Y H:i'),
         ];
     }
 }

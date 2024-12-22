@@ -13,7 +13,7 @@ const isLoading = ref(false)
 const submit = async() => {
     try {
         isLoading.value = true
-        const response = await axios.post('/api/user/password/email', form)
+        const response = await axios.post('/api/users/password/email', form)
 
         if (response){
             toast.success(response.data.message)

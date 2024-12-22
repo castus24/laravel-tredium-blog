@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\User;
 
+use App\Enums\RoleEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Resources\UserResource;
@@ -28,6 +29,9 @@ class RegisterController extends Controller
 
         try {
             $user = User::query()->create($validated);
+
+            /** @var User $user */
+            $user->assignRole(RoleEnum::USER);
 
             return response()->json([
                 'message' => trans('auth.register.success'),
