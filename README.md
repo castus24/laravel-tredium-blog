@@ -102,6 +102,10 @@ npm install vue-router
 ```
 
 ```bash
+npm install pinia
+```
+
+```bash
 npm install @vitejs/plugin-vue
 ```
 

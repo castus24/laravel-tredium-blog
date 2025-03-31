@@ -18,9 +18,9 @@ const headers = reactive([
     {title: "Title", key: "title", align: "start"},
     {title: "Slug", key: "slug", align: "start"},
     {title: "Published at", key: "published_at", align: "start"},
-    {title: "Show", key: "show", align: "center", sortable: false},
-    {title: "Edit", key: "edit", align: "center", sortable: false},
-    {title: "Delete", key: "delete", align: "center", sortable: false},
+    {title: "Show", key: "show", align: "center", sortable: false, width: "100px"},
+    {title: "Edit", key: "edit", align: "center", sortable: false, width: "100px"},
+    {title: "Delete", key: "delete", align: "center", sortable: false, width: "100px"},
 ]);
 
 const modals = reactive({
@@ -200,9 +200,6 @@ const deleteArticle = async (articleForDelete) => {
             <ShowForm
                 v-if="selectedArticle"
                 :entity="selectedArticle"
-                :titleKey="'title'"
-                :contentKey="'content'"
-                :imageKey="'main'"
                 @close="closeModal('show')"
             />
         </v-dialog>

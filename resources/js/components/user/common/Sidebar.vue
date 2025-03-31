@@ -24,9 +24,10 @@ const logout = () => {
                     :subtitle="user.email"
                     :title="user.name"
                 >
-                    <v-divider></v-divider>
                 </v-list-item>
             </v-list>
+
+            <v-divider></v-divider>
 
             <v-list dense nav>
                 <v-list-item

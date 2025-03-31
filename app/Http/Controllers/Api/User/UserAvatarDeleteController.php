@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class UserAvatarDeleteController extends Controller
 {
@@ -20,7 +21,7 @@ class UserAvatarDeleteController extends Controller
         if (!$user->hasMedia('avatars')) {
             return response()->json([
                 'message' => trans('user.avatar.not_exist'),
-            ], 404);
+            ], ResponseAlias::HTTP_NOT_FOUND);
         }
 
         $user->clearMediaCollection('avatars');

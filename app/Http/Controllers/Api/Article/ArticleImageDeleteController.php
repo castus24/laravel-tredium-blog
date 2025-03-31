@@ -10,16 +10,15 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
-
-class ArticlePhotoDeleteController extends Controller
+class ArticleImageDeleteController extends Controller
 {
     public function __invoke(Article $article): JsonResponse
     {
-        $media = Arr::get($article->getMedia('article_photos'), '0');
+        $media = Arr::get($article->getMedia('article_images'), '0');
 
         if (!$media) {
             return response()->json([
-                'message' => trans('article.photo.not_found'),
+                'message' => trans('article.image.not_found'),
             ], ResponseAlias::HTTP_NOT_FOUND);
         }
 
@@ -28,13 +27,13 @@ class ArticlePhotoDeleteController extends Controller
             $media->delete();
 
             return response()->json([
-                'message' => trans('article.photo.deleted'),
+                'message' => trans('article.image.deleted'),
             ], ResponseAlias::HTTP_OK);
         } catch (Exception $e) {
             Log::error($e->getMessage());
 
             return response()->json([
-                'message' => trans('article.photo.delete_failed'),
+                'message' => trans('article.image.delete_failed'),
             ], ResponseAlias::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

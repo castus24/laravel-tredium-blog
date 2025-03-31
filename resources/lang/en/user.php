@@ -7,7 +7,7 @@ return [
     'code' => 'This verification code is invalid.',
     'update' => 'The email address has been successfully updated!',
     'password' => 'The password has been successfully updated!',
-    'avatar' => [
+    'image' => [
         'uploaded' => 'The avatar has been successfully uploaded!',
         'deleted' => 'The avatar has been deleted.',
         'not_exist' => 'The avatar does not exist.',

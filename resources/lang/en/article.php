@@ -4,7 +4,7 @@ return [
     'added' => 'Article has been successfully added!',
     'updated' => 'Article has been successfully updated!',
     'deleted' => 'Article has been successfully deleted!',
-    'photo' => [
+    'image' => [
         'not_exist' => 'The image does not exist.',
         'too_big' => 'The image file size too big.',
         'max' => 'Maximum number of uploaded files exceeded.',

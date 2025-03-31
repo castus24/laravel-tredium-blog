@@ -17,11 +17,8 @@ use Illuminate\Http\Resources\Json\JsonResource;
  */
 class ArticleShowResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @return array<string, mixed>
-     */
+    private string $type = 'article';
+
     public function toArray(Request $request): array
     {
         return [
@@ -29,9 +26,10 @@ class ArticleShowResource extends JsonResource
             'title' => $this->title,
             'content' => $this->content,
             'slug' => $this->slug,
-            'main' => $this->getFirstMediaUrl('article_photos'),
-            'thumbnail' => $this->getFirstMediaUrl('article_photos', 'thumbnail'),
+            'main_image' => $this->getFirstMediaUrl('article_images'),
+            'thumbnail' => $this->getFirstMediaUrl('article_images', 'thumbnail'),
             'published_at' => $this->published_at,
+            'type' => $this->type
         ];
     }
 }

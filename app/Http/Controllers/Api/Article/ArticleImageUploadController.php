@@ -12,28 +12,29 @@ use Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
-class ArticlePhotoUploadController extends Controller
+class ArticleImageUploadController extends Controller
 {
     public function __invoke(ArticlePhotoRequest $request, Article $article): JsonResponse
     {
         /** @var Article $article */
         try {
-            $article->addMediaFromRequest('photo')
-                ->toMediaCollection('article_photos', 'public_images');
+            $article
+                ->addMediaFromRequest('image')
+                ->toMediaCollection('article_images', 'public_images');
         } catch (FileDoesNotExist $e) {
             Log::error($e->getMessage());
             return response()->json([
-                'message' => trans('article.photo.not_exist'),
+                'message' => trans('article.image.not_exist'),
             ], 422);
         } catch (FileIsTooBig $e) {
             Log::error($e->getMessage());
             return response()->json([
-                'message' => trans('article.photo.too_big'),
+                'message' => trans('article.image.too_big'),
             ], 422);
         }
 
         return response()->json([
-            'message' => trans('article.photo.uploaded'),
+            'message' => trans('article.image.uploaded'),
             'data' => new ArticleShowResource($article)
         ], ResponseAlias::HTTP_OK);
     }

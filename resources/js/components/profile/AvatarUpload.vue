@@ -1,4 +1,4 @@
-<script setup>
+<script setup> //todo need delete after optimization
 import {reactive, ref} from "vue"
 import {useToast} from "vue-toastification"
 import axios from "@/plugins/axios";
@@ -11,24 +11,24 @@ const form = reactive({
 })
 
 defineProps({
-    currentAvatar: String,
+    currentImage: String,
 })
 
-const emit = defineEmits(["avatar-updated"])
-const submit = async() => {
+const emit = defineEmits(["image-updated"])
+const submit = async () => {
     console.log("Avatar value:", form.avatar)
     const formData = new FormData();
     formData.append('avatar', form.avatar);
 
     try {
-        const response = await axios.post('/api/user/avatar/upload', formData, {
+        const response = await axios.post('/api/users/image', formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
         });
 
         toast.success(response.data.message)
-        emit("avatar-updated", response.data.data.avatar)
+        emit("image-updated", response.data.data.avatar)
     } catch (error) {
         toast.error(error.response.data.message)
     } finally {

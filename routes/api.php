@@ -3,8 +3,8 @@
 use App\Http\Controllers\Api\Article\ArticleAddController;
 use App\Http\Controllers\Api\Article\ArticleAllController;
 use App\Http\Controllers\Api\Article\ArticleDeleteController;
-use App\Http\Controllers\Api\Article\ArticlePhotoDeleteController;
-use App\Http\Controllers\Api\Article\ArticlePhotoUploadController;
+use App\Http\Controllers\Api\Article\ArticleImageDeleteController;
+use App\Http\Controllers\Api\Article\ArticleImageUploadController;
 use App\Http\Controllers\Api\Article\ArticleShowController;
 use App\Http\Controllers\Api\Article\ArticleUpdateController;
 use App\Http\Controllers\Api\Permission\PermissionAddController;
@@ -19,8 +19,10 @@ use App\Http\Controllers\Api\Role\RoleUpdateController;
 use App\Http\Controllers\Api\Tag\TagAddController;
 use App\Http\Controllers\Api\Tag\TagAllController;
 use App\Http\Controllers\Api\Tag\TagDeleteController;
-use App\Http\Controllers\Api\Tag\TagShowController;
 use App\Http\Controllers\Api\Tag\TagUpdateController;
+use App\Http\Controllers\Api\User\Contact\UserContactAddController;
+use App\Http\Controllers\Api\User\Contact\UserContactDeleteController;
+use App\Http\Controllers\Api\User\Contact\UserContactUpdateController;
 use App\Http\Controllers\Api\User\ForgotPasswordController;
 use App\Http\Controllers\Api\User\LoginController;
 use App\Http\Controllers\Api\User\RegisterController;
@@ -66,16 +68,20 @@ Route::namespace('App\Http\Controllers\Api')
                         Route::get('list', UserListController::class);
                         Route::put('name', UserNameUpdateController::class);
                         Route::put('{user}/role', UserRoleUpdateController::class);
-                        Route::prefix('avatar')
-                            ->group(function () {
-                                Route::post('upload', UserAvatarUploadController::class);
-                                Route::delete('delete', UserAvatarDeleteController::class);
-                            });
+                        Route::post('image', UserAvatarUploadController::class); //todo
+                        Route::delete('image', UserAvatarDeleteController::class); //todo
                         Route::prefix('email')
                             ->group(function() {
                                 Route::post('email', UserEmailEmailController::class);
                                 Route::put('update', UserEmailUpdateController::class)
                                     ->middleware('throttle:2');
+                            });
+                        //todo check
+                        Route::prefix('contact')
+                            ->group(function () {
+                                Route::post('', UserContactAddController::class);
+                                Route::put('{contact}', UserContactUpdateController::class);
+                                Route::delete('{contact}', UserContactDeleteController::class);
                             });
                     });
             });
@@ -88,8 +94,8 @@ Route::namespace('App\Http\Controllers\Api')
                 Route::get('{article:slug}', ArticleShowController::class);
                 Route::put('{article:slug}', ArticleUpdateController::class);
                 Route::delete('{article:slug}', ArticleDeleteController::class);
-                Route::post('/{article:slug}/photo', ArticlePhotoUploadController::class);
-                Route::delete('/{article:slug}/photo', ArticlePhotoDeleteController::class);
+                Route::post('{article:slug}/image', ArticleImageUploadController::class); //todo
+                Route::delete('{article:slug}/image', ArticleImageDeleteController::class); //todo
             });
 
         Route::namespace('Tag')

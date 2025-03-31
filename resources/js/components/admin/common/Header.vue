@@ -1,7 +1,5 @@
 <script setup>
-import {defineEmits} from 'vue'
 import {useRouter} from "vue-router"
-import trediumLogo from "@/assets/images/tredium_logo_tp_white.png";
 
 const router = useRouter()
 const emit = defineEmits(['sidebar-drawer'])

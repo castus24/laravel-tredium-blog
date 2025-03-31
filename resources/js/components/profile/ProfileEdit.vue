@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, toRefs } from "vue";
+import { reactive } from "vue";
 
 const props = defineProps({
     user: Object,
@@ -48,7 +48,3 @@ const saveChanges = () => {
         </v-card>
     </v-container>
 </template>
-
-<style scoped>
-
-</style>

@@ -18,9 +18,9 @@ const headers = reactive([
     {title: "Name", key: "name", align: "start"},
     {title: "Email", key: "email", align: "start"},
     {title: "Role", key: "role", align: "start"},
-    {title: "Show", key: "show", align: "center", sortable: false},
-    {title: "Edit", key: "edit", align: "center", sortable: false},
-    {title: "Delete", key: "delete", align: "center", sortable: false},
+    {title: "Show", key: "show", align: "center", sortable: false, width: "100px"},
+    {title: "Edit", key: "edit", align: "center", sortable: false, width: "100px"},
+    {title: "Delete", key: "delete", align: "center", sortable: false, width: "100px"},
 ]);
 
 const modals = reactive({
@@ -38,16 +38,6 @@ const formConfig = ref({
 const openModal = (type, user = null) => {
     selectedUser.value = user ? {...user} : null;
     modals[type] = true;
-
-    if (type === 'add') {
-        formConfig.value = {
-            title: 'Add User',
-            fields: [
-                {model: 'title', label: 'Title', type: 'text'},
-                {model: 'content', label: 'Content', type: 'textarea'},
-            ],
-        };
-    }
 };
 
 const closeModal = (type) => {
@@ -75,7 +65,6 @@ const loadUsers = async ({page, itemsPerPage, sortBy}) => {
             ...user,
             role: user.roles?.length ? user.roles.map(role => role.name).join(', ') : 'No Role'
         }));
-        console.log(users.value)
         totalItems.value = meta.total
     } catch (error) {
         console.error("Error loading users:", error)
@@ -128,15 +117,6 @@ const deleteUser = async (userForDelete) => {
 
 <template>
     <v-container>
-        <v-btn
-            color="success"
-            variant="tonal"
-            class="mb-5"
-            @click="openModal('add')"
-        >
-            Add User
-        </v-btn>
-
         <v-card elevation="5">
             <v-data-table-server
                 v-model:items-per-page="itemsPerPage"
@@ -177,7 +157,7 @@ const deleteUser = async (userForDelete) => {
             </v-data-table-server>
         </v-card>
 
-        <v-dialog v-model="modals.show" max-width="500px">
+        <v-dialog v-model="modals.show" max-width="500">
             <ShowForm
                 v-if="selectedUser"
                 :entity="selectedUser"
@@ -188,7 +168,7 @@ const deleteUser = async (userForDelete) => {
             />
         </v-dialog>
 
-        <v-dialog v-model="modals.update" max-width="500px">
+        <v-dialog v-model="modals.update" max-width="500">
             <UpdateForm
                 v-if="selectedUser"
                 :title="'Update User'"
@@ -202,7 +182,7 @@ const deleteUser = async (userForDelete) => {
             />
         </v-dialog>
 
-        <v-dialog v-model="modals.delete" max-width="500px">
+        <v-dialog v-model="modals.delete" max-width="500">
             <DeleteForm
                 v-if="selectedUser"
                 :title="'Delete User'"

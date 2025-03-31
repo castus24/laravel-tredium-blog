@@ -1,9 +1,9 @@
-@import "app";
+@use "app";
 
-@import "user/common/sidebar";
-@import "user/common/header";
-@import "user/common/footer";
+@use "user/common/sidebar";
+@use "user/common/header";
+@use "user/common/footer";
 
-@import "article";
-@import "tag";
-@import "profile";
+@use "article";
+@use "tag";
+@use "profile";

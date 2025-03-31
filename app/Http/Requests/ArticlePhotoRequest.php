@@ -12,7 +12,7 @@ class ArticlePhotoRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'photo' => ['required', 'mimes:png,jpg,jpeg', 'max:2048'],
+            'image' => ['required', 'mimes:png,jpg,jpeg', 'max:2048'],
         ];
     }
 }

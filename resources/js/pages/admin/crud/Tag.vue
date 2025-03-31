@@ -1,5 +1,5 @@
 <script setup>
-import {ref, reactive, onMounted} from 'vue'
+import {ref, reactive} from 'vue'
 import {useToast} from "vue-toastification";
 import AddForm from "@/components/admin/crud/AddForm.vue";
 import UpdateForm from "@/components/admin/crud/UpdateForm.vue";

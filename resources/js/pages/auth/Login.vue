@@ -6,7 +6,7 @@ import trediumLogo from '@/assets/images/tredium_logo_tp_white.png'
 import {useToast} from 'vue-toastification'
 
 const authStore = useAuthStore()
-const router = useRouter()
+const router = useRouter() //todo check
 const toast = useToast()
 
 const isVisible = ref(false)

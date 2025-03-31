@@ -4,8 +4,9 @@ import {useAuthStore} from "@/stores/auth.js"
 import {useRouter} from "vue-router"
 import ProfileEdit from "@/components/profile/ProfileEdit.vue"
 import Profile from "@/components/profile/Profile.vue"
-import AvatarUpload from "@/components/profile/AvatarUpload.vue"
 import Avatar from "@/components/profile/Avatar.vue"
+import ImageUpload from "@/components/ui/ImageUpload.vue";
+import Setting from "@/components/user/common/Setting.vue";
 
 const authStore = useAuthStore()
 const router = useRouter()
@@ -47,7 +48,7 @@ const updateAvatar = (avatarUrl) => {
         </v-card>
 
         <v-card v-else>
-            <v-card :title="user.name" color="blue-darken-1" variant="tonal" />
+            <v-card :title="user.name" color="blue-darken-1" variant="tonal"/>
 
             <div class="d-flex flex-row">
                 <v-tabs
@@ -93,7 +94,7 @@ const updateAvatar = (avatarUrl) => {
                     </v-tabs-window-item>
 
                     <v-tabs-window-item value="option-2">
-                        <v-container min-width="700">
+                        <v-container>
                             <v-row v-if="user.avatar">
                                 <v-card-item>
                                     <Avatar
@@ -103,20 +104,16 @@ const updateAvatar = (avatarUrl) => {
                                 </v-card-item>
                             </v-row>
                             <v-row>
-                                <AvatarUpload
-                                    :current-avatar="user.avatar"
-                                    @avatar-updated="updateAvatar"
+                                <ImageUpload
+                                    :entity="user"
+                                    @image-updated="updateAvatar"
                                 />
                             </v-row>
                         </v-container>
                     </v-tabs-window-item>
 
                     <v-tabs-window-item value="option-3">
-                        <v-card flat>
-                            <v-card-text>
-                                111
-                            </v-card-text>
-                        </v-card>
+                        <Setting></Setting>
                     </v-tabs-window-item>
                 </v-tabs-window>
             </div>

@@ -54,6 +54,9 @@ class User extends Authenticatable implements HasMedia
         'password' => 'hashed',
     ];
 
+
+    protected $with = ['contacts'];
+
     public static function getAllowedFilters(): array
     {
         return [
@@ -66,6 +69,11 @@ class User extends Authenticatable implements HasMedia
         return [
             //
         ];
+    }
+
+    public function contacts(): HasMany
+    {
+        return $this->hasMany(UserContact::class);
     }
 
     public function likedPosts(): BelongsToMany
