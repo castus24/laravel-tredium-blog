@@ -39,21 +39,13 @@
     php artisan key:generate
    ```
 
-5. Установите библиотеку spatie/laravel-query-builder
-
-   ```bash
-   composer require spatie/laravel-query-builder
-   ```
+5. Настройки для spatie/laravel-query-builder
 
    ```bash
    php artisan vendor:publish --provider="Spatie\QueryBuilder\QueryBuilderServiceProvider" --tag="query-builder-config"
    ```
 
-6. Установите библиотеку spatie/laravel-permission
-
-   ```bash
-   composer require spatie/laravel-permission
-   ```
+6. Настройки для spatie/laravel-permission
 
    - Добавьте в config/app.php провайдер. Spatie\Permission\PermissionServiceProvider::class
 
@@ -63,14 +55,12 @@
 
    - В модель User -> use HasRoles;
 
-7. Установите библиотеку spatie/laravel-medialibrary
-
-   ```bash
-   composer require spatie/laravel-medialibrary
-   ```
+7. Настройки для spatie/laravel-medialibrary
 
    ```bash
    php artisan vendor:publish --provider="Spatie\MediaLibrary\MediaLibraryServiceProvider" --tag="medialibrary-migrations"
+   ```
+   
 8. Создайте миграцию для таблицы очередей.
 
    ```bash
@@ -83,35 +73,11 @@
    php artisan migrate
    ```
 
-10. Установите npm, vue, vuetify, vue-router.
+10. Установите npm.
 
-```bash
-npm install
-```
-
-```bash
-npm install vue
-```
-
-```bash
-npm install vuetify
-```
-
-```bash
-npm install vue-router
-```
-
-```bash
-npm install pinia
-```
-
-```bash
-npm install @vitejs/plugin-vue
-```
-
-```bash
-php artisan @mdi/font
-```
+    ```bash
+    npm install
+    ```
 
 11. Запустите cервер artisan и npm, а также воркер для очередей:
 
