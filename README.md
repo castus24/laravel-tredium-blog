@@ -1,4 +1,4 @@
-# Laravel User Crud + Vue on Vuetify
+#  Blog (Laravel + Vue on Vuetify)
 
 ## Установка
 
