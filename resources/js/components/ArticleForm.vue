@@ -32,7 +32,7 @@ const like = async () => {
     >
         <div>
             <v-img
-                :src="article.main"
+                :src="article.main_image"
                 cover
                 height="250"
             ></v-img>

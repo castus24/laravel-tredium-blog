@@ -9,8 +9,8 @@ const props = defineProps({
 });
 
 const updateImage = (imageUrl) => {
-    if (props.entity.main) {
-        props.entity.main = imageUrl
+    if (props.entity.main_image) {
+        props.entity.main_image = imageUrl
     }
 };
 
@@ -22,12 +22,13 @@ const emit = defineEmits(['close']);
 </script>
 
 <template>
-    <v-card class="mx-auto pa-4" min-width="400">
-        {{ entity.main_image}}
+    <v-card class="mx-auto pa-4" min-width="500">
         <v-img
             v-if="entity.main_image"
-            min-height="200"
+            width="400"
+            height="300"
             :src="entity.main_image"
+            class="mx-auto"
             cover
         ></v-img>
         <ImageUpload
